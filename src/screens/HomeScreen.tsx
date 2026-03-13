@@ -24,9 +24,11 @@ export default function HomeScreen({ navigation }: Props) {
   const names = Array.from(namesSet);
 
   const handleAdd = () => {
+    const namesArray = Array.from(namesSet);
+    const existingIndex = namesArray.findIndex(name => name.toLowerCase() === textInput.toLowerCase());
     const newSet = new Set(namesSet);
-    if (newSet.has(textInput)) {
-      newSet.delete(textInput);
+    if (existingIndex !== -1) {
+      newSet.delete(namesArray[existingIndex]);
     } else {
       newSet.add(textInput);
     }
