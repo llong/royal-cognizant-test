@@ -55,25 +55,28 @@ export default function HomeScreen({ navigation }: Props) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.buttonContainer}>
-        <Pressable style={[styles.button, styles.addButton]} onPress={handleAdd}>
-          <Text style={styles.buttonText}>Add</Text>
-        </Pressable>
-        <Pressable style={[styles.button, styles.deleteButton]} onPress={handleDelete}>
-          <Text style={styles.buttonText}>Delete</Text>
-        </Pressable>
-      </View>
       <FlatList
         contentContainerStyle={{ flex: 1, gap: 20 }}
         data={names}
         keyExtractor={item => item}
         renderItem={renderItem}
       />
-      <TextInput
-        placeholder="Add name"
-        value={textInput}
-        onChangeText={text => setTextInput(text)}
-      />
+      <View style={styles.inputSection}>
+        <TextInput
+          style={styles.textInput}
+          placeholder="Add name"
+          value={textInput}
+          onChangeText={text => setTextInput(text)}
+        />
+        <View style={styles.buttonContainer}>
+          <Pressable style={[styles.button, styles.deleteButton]} onPress={handleDelete}>
+            <Text style={styles.buttonText}>Delete</Text>
+          </Pressable>
+          <Pressable style={[styles.button, styles.addButton]} onPress={handleAdd}>
+            <Text style={styles.buttonText}>Add</Text>
+          </Pressable>
+        </View>
+      </View>
     </View>
   );
 }
@@ -85,10 +88,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#ecf0f1',
     padding: 8,
   },
+  inputSection: {
+    marginTop: 20,
+  },
+  textInput: {
+    backgroundColor: 'white',
+    padding: 15,
+    borderRadius: 8,
+    fontSize: 16,
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: 20,
+    justifyContent: 'space-between',
   },
   button: {
     flex: 1,
