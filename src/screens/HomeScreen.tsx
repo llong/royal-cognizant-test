@@ -20,7 +20,6 @@ export default function HomeScreen({ navigation }: Props) {
   const [textInput, setTextInput] = useState("");
 
   const handleAdd = () => {
-    console.log(names);
     if (names.includes(textInput)) {
       setNames(prev => prev.filter(name => name !== textInput));
     } else {

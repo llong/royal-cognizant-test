@@ -2,7 +2,8 @@ import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RouteProp } from '@react-navigation/native';
-import { useFavorites } from '../context/FavoritesContext';
+import { useAtom } from 'jotai';
+import { favoritesAtom } from '../atoms/favorites';
 
 type RootStackParamList = {
   Home: undefined;
@@ -19,22 +20,26 @@ type Props = {
 
 export default function DetailsScreen({ navigation, route }: Props) {
   const { name } = route.params;
-  const { isFavorite, addFavorite, removeFavorite } = useFavorites();
+  const [favorites, setFavorites] = useAtom(favoritesAtom);
 
   const handleToggleFavorite = () => {
-    if (isFavorite(name)) {
-      removeFavorite(name);
+    const newFavorites = new Set(favorites);
+    if (newFavorites.has(name)) {
+      newFavorites.delete(name);
     } else {
-      addFavorite(name);
+      newFavorites.add(name);
     }
+    setFavorites(newFavorites);
   };
+
+  const isFavorite = favorites.has(name);
 
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Details Screen</Text>
       <Text style={styles.nameText}>Person: {name}</Text>
       <Button
-        title={isFavorite(name) ? 'Remove from Favorites' : 'Add to Favorites'}
+        title={isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
         onPress={handleToggleFavorite}
       />
     </View>
