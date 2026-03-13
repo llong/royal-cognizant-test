@@ -46,7 +46,8 @@ export default function HomeScreen({ navigation }: Props) {
     return (
       <Pressable onPress={() => navigation.navigate('Details', { name: item })}>
         <View style={styles.item}>
-          <Text>{item}</Text>
+          <Text style={styles.itemText}>{item}</Text>
+          <Text style={styles.chevron}>›</Text>
         </View>
       </Pressable>
     );
@@ -106,9 +107,19 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
   },
+  itemText: {
+    fontSize: 16,
+  },
+  chevron: {
+    fontSize: 20,
+    color: 'gray',
+  },
   item: {
     padding: 10,
     backgroundColor: '#fff',
     borderRadius: 5,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });
