@@ -1,0 +1,107 @@
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, FlatList, TextInput, Pressable } from 'react-native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
+type RootStackParamList = {
+  Home: undefined;
+  Details: { name: string };
+};
+
+type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
+
+type Props = {
+  navigation: HomeScreenNavigationProp;
+};
+
+const initialNames = ["John Smith", "Cindy Doe", "Lewis Long", "Claude Wilde"];
+
+export default function HomeScreen({ navigation }: Props) {
+  const [names, setNames] = useState<string[]>(initialNames);
+  const [textInput, setTextInput] = useState("");
+
+  const handleAdd = () => {
+    console.log(names);
+    if (names.includes(textInput)) {
+      setNames(prev => prev.filter(name => name !== textInput));
+    } else {
+      setNames(prev => [...prev, textInput]);
+    }
+    setTextInput("");
+  };
+
+  const handleDelete = () => {
+    const prevNames = [...names];
+    prevNames.pop();
+    setNames(prevNames);
+  };
+
+  const renderItem = ({ item }: { item: string }) => {
+    return (
+      <Pressable onPress={() => navigation.navigate('Details', { name: item })}>
+        <View style={styles.item}>
+          <Text>{item}</Text>
+        </View>
+      </Pressable>
+    );
+  };
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.buttonContainer}>
+        <Pressable style={[styles.button, styles.addButton]} onPress={handleAdd}>
+          <Text style={styles.buttonText}>Add</Text>
+        </Pressable>
+        <Pressable style={[styles.button, styles.deleteButton]} onPress={handleDelete}>
+          <Text style={styles.buttonText}>Delete</Text>
+        </Pressable>
+      </View>
+      <FlatList
+        contentContainerStyle={{ flex: 1, gap: 20 }}
+        data={names}
+        keyExtractor={item => item}
+        renderItem={renderItem}
+      />
+      <TextInput
+        placeholder="Add name"
+        value={textInput}
+        onChangeText={text => setTextInput(text)}
+      />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: '#ecf0f1',
+    padding: 8,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 20,
+  },
+  button: {
+    flex: 1,
+    padding: 10,
+    marginHorizontal: 5,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  addButton: {
+    backgroundColor: '#4CAF50',
+  },
+  deleteButton: {
+    backgroundColor: 'red',
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+  },
+  item: {
+    padding: 10,
+    backgroundColor: '#fff',
+    borderRadius: 5,
+  },
+});
