@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, FlatList, TextInput, Pressable } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useAtom } from 'jotai';
+import { favoritesAtom } from '../atoms/favorites';
 
 type RootStackParamList = {
   Home: undefined;
@@ -16,22 +18,26 @@ type Props = {
 const initialNames = ["John Smith", "Cindy Doe", "Lewis Long", "Claude Wilde"];
 
 export default function HomeScreen({ navigation }: Props) {
-  const [names, setNames] = useState<string[]>(initialNames);
+  const [namesSet, setNamesSet] = useAtom(favoritesAtom);
   const [textInput, setTextInput] = useState("");
 
+  const names = Array.from(namesSet);
+
   const handleAdd = () => {
-    if (names.includes(textInput)) {
-      setNames(prev => prev.filter(name => name !== textInput));
+    const newSet = new Set(namesSet);
+    if (newSet.has(textInput)) {
+      newSet.delete(textInput);
     } else {
-      setNames(prev => [...prev, textInput]);
+      newSet.add(textInput);
     }
+    setNamesSet(newSet);
     setTextInput("");
   };
 
   const handleDelete = () => {
-    const prevNames = [...names];
-    prevNames.pop();
-    setNames(prevNames);
+    const namesArray = Array.from(namesSet);
+    namesArray.pop();
+    setNamesSet(new Set(namesArray));
   };
 
   const renderItem = ({ item }: { item: string }) => {
